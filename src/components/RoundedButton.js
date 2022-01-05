@@ -1,11 +1,15 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { colors } from "./../utils/colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const RoundedButton = ({
   style = {},
   textStyle = {},
   size = 125,
+  icon = false,
+  iconSize = 24,
+  iconName,
   ...props
 }) => {
   return (
@@ -13,7 +17,11 @@ const RoundedButton = ({
       style={[styles(size).radius, style]}
       onPress={props.onPress}
     >
-      <Text style={[styles(size).text, textStyle]}>{props.title}</Text>
+      {icon == true ? (
+        <MaterialCommunityIcons name={iconName} size={iconSize} color="white" />
+      ) : (
+        <Text style={[styles(size).text, textStyle]}>{props.title}</Text>
+      )}
     </TouchableOpacity>
   );
 };

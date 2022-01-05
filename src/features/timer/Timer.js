@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Vibration, Platform } from "react-native";
 import Countdown from "../../components/Countdown";
 import RoundedButton from "../../components/RoundedButton";
@@ -7,25 +7,9 @@ import { fontSizes, spacing } from "../../utils/sizes";
 import { ProgressBar } from "react-native-paper";
 import Timing from "./Timing";
 import { useKeepAwake } from "expo-keep-awake";
-//var Sound = require("react-native-sound");
+import { Audio } from "expo-av";
 
-// setting the sound
-//Sound.setCategory("Playback");
-// var ding = new Sound("alarm.mp3", Sound.MAIN_BUNDLE, (error) => {
-//   if (error) {
-//     console.log("failed to load the sound", error);
-//     return;
-//   }
-//   // if loaded successfully
-//   console.log(
-//     "duration in seconds: " +
-//       ding.getDuration() +
-//       "number of channels: " +
-//       ding.getNumberOfChannels()
-//   );
-// });
-
-const DEFAULT_TIME = 0.05;
+const DEFAULT_TIME = 2;
 
 const Timer = ({ focusSubject, onTimerEnd, clearSubject }) => {
   useKeepAwake();
@@ -33,6 +17,7 @@ const Timer = ({ focusSubject, onTimerEnd, clearSubject }) => {
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
   const [minutes, setMinutes] = useState(DEFAULT_TIME);
+  const [vibrateSound, enableVibrateSound] = useState(true);
 
   const onProgress = (progress) => {
     setProgress(progress);
@@ -44,17 +29,27 @@ const Timer = ({ focusSubject, onTimerEnd, clearSubject }) => {
     setIsStarted(false);
   };
 
+  const playSound = useCallback(async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./../../../assets/alarm.wav")
+    );
+    await sound.playAsync();
+  }, []);
+
   const vibrate = () => {
     if (Platform.OS === "ios") {
       const interval = setInterval(() => Vibration.vibrate(), 1000);
-      setTimeout(() => clearInterval(interval), 3000);
+      setTimeout(() => clearInterval(interval), DEFAULT_TIME * 1000);
     } else {
-      Vibration.vibrate(2000);
+      Vibration.vibrate(DEFAULT_TIME * 1000);
     }
   };
 
-  const onEnd = () => {
-    vibrate();
+  const onEnd = async () => {
+    if (vibrateSound) {
+      await playSound();
+      vibrate();
+    }
     setIsStarted(false);
     setTimeout(() => {
       setMinutes(DEFAULT_TIME);
@@ -85,22 +80,23 @@ const Timer = ({ focusSubject, onTimerEnd, clearSubject }) => {
           style={{ height: 10 }}
         />
       </View>
-      <View style={styles.buttonWrapper}>
+      <View style={styles.timeWrapper}>
         <Timing changeTime={changeTime} />
+        <Timing changeTime={changeTime} second={true} />
       </View>
       <View style={styles.buttonWrapper}>
         {isStarted ? (
           <RoundedButton
-            title="pause"
+            title="Pause"
             size={100}
-            textStyle={{ fontSize: 30 }}
+            textStyle={{ fontSize: 26 }}
             onPress={() => setIsStarted(false)}
           />
         ) : (
           <RoundedButton
             title="Start"
             size={100}
-            textStyle={{ fontSize: 30 }}
+            textStyle={{ fontSize: 28 }}
             onPress={() => setIsStarted(true)}
           />
         )}
@@ -111,6 +107,30 @@ const Timer = ({ focusSubject, onTimerEnd, clearSubject }) => {
           size={65}
           textStyle={{ fontSize: 18 }}
           onPress={() => clearSubject(focusSubject)}
+        />
+        {!vibrateSound ? (
+          <RoundedButton
+            icon={true}
+            size={50}
+            iconSize={26}
+            iconName={"volume-vibrate"}
+            onPress={() => enableVibrateSound(true)}
+          />
+        ) : (
+          <RoundedButton
+            icon={true}
+            size={50}
+            iconSize={26}
+            iconName={"vibrate-off"}
+            onPress={() => enableVibrateSound(false)}
+          />
+        )}
+
+        <RoundedButton
+          title="Done"
+          size={65}
+          textStyle={{ fontSize: 18 }}
+          onPress={onEnd}
         />
       </View>
     </View>
@@ -140,19 +160,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  timeWrapper: {
+    flex: 0.4,
+    padding: 25,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "stretch",
+  },
   buttonWrapper: {
     flex: 0.2,
-    padding: 50,
+    padding: 20,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
   },
   progress: {
     paddingTop: spacing.sm,
   },
   clearSubject: {
-    paddingBottom: 25,
-    paddingLeft: 25,
+    padding: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 export default Timer;
