@@ -3,6 +3,8 @@
     "name": "FocusTime",
     "slug": "FocusTime",
     "version": "1.0.0",
+    "privacy": "public",
+    "description": "This is a focus time monitoring app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -15,13 +17,17 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.akashsaha.FocusTime",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.akashsaha.FocusTime",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
