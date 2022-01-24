@@ -6,7 +6,7 @@
     "privacy": "public",
     "description": "This is a focus time monitoring app",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/focus-logo.png",
     "splash": {
       "image": "./assets/focus-splash.png",
       "resizeMode": "contain",
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/focus-logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.akash.foustime",
