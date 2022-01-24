@@ -35,7 +35,7 @@ const Countdown = ({ minutes, isPaused, onProgress, onEnd }) => {
       return;
     }
     interval.current = setInterval(countDown, 1000);
-    //return () => clearInterval(interval.current);
+    return () => clearInterval(interval.current);
   }, [isPaused]);
 
   useEffect(() => {

@@ -33,3 +33,5 @@ buildTypes
 
 Step 4 Generating the APK
 gradlew assembleRelease
+
+privacy policy url: https://pages.flycricket.io/focus-time-0/privacy.html
