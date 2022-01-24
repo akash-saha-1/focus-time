@@ -31,10 +31,13 @@ buildTypes
         }
 }
 
-Step 4 Generating the APK
+Step 4 Generating the APK and bundle in debug mode and test it across devices
 gradlew assembleRelease
 
-step 5 uploading to google play stores we need .aab file
+step 5 Generating google play production file
+gradlew bundleRelease
+
+step 6 uploading to google play stores we need .aab file
 go to android->app->build->outputs->bundle->release
 
 privacy policy url: https://pages.flycricket.io/focus-time-0/privacy.html
