@@ -34,4 +34,7 @@ buildTypes
 Step 4 Generating the APK
 gradlew assembleRelease
 
+step 5 uploading to google play stores we need .aab file
+go to android->app->build->outputs->bundle->release
+
 privacy policy url: https://pages.flycricket.io/focus-time-0/privacy.html
